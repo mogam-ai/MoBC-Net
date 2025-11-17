@@ -1,4 +1,6 @@
 
+
+```{r}
 library(dplyr)
 library(MoBCnet)
 # tutorial
@@ -26,4 +28,4 @@ re3 = dist.res$graph
 mobc.res <- MoBC.genes(ppi, module.gene.list=modules, module1='1', module2 = '2', randomMethod='RandSDM',random=1000, ratio=0.07,nCore=3)
 mobc.res %>% head
 
-
+```
