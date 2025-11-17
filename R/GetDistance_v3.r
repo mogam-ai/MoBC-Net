@@ -92,14 +92,17 @@ CommuinityDistance <- function(network,
 
         fn1 = paste0(dirn,'/hist_bin.RDS')
         saveRDS(hist.bin0, file=fn1)
+        cat('Generated A bin.\n')
     }
 
-
+    flag = seq(1,10)/10*random
     # if not random --> make random file first
     if(!all(files_valid) & randomMethod=='RandSD'){
         hist.bin = hist.bin0$node_bag
         names(hist.bin) = 1:length(hist.bin)
         make_random = parallel::mclapply(1:random, mc.cores=nCore, function(j){
+
+            if(any(flag %in% j)) cat('Random ',j,' is generating...\n')
 
             sample.save = list()
             for(ii in 1:length(comm.genelist)){
@@ -108,7 +111,7 @@ CommuinityDistance <- function(network,
                 samplingN = sapply(hist.bin, function(xx) sum(names(xx) %in% comm.genelist[[ii]])) %>% 'names<-'(names(hist.bin))
                 clg.random = lapply(names(samplingN), function(xn){
                     use.bg = setdiff(hist.bin[[xn]], unlist(sample.save)) 
-                    sample(use.bg, samplingN[[xn]], replace=FALSE)
+                    base::sample(use.bg, samplingN[[xn]], replace=FALSE)
                 }) %>% unlist %>% unique
 
                 sample.save[[ii]] = clg.random
@@ -119,10 +122,12 @@ CommuinityDistance <- function(network,
         })
 
     } else if(!all(files_valid) & randomMethod=='RandSDM'){
+        cat('hi?ㅇㅅㅇ\n')
         S <- igraph::distances(g.res, algorithm = "unweighted")
-        comm.distance.list = parallel::mclapply(1:random, mc.cores=nCore, function(j){
-        # comm.distance.list = lapply(1:random,  function(j){
-            # cat('Random :',j,'\n')
+        cat('hi?ㅎㅅㅎ\n')
+        # comm.distance.list = parallel::mclapply(1:random, mc.cores=nCore, function(j){
+        comm.distance.list = lapply(1:random,  function(j){
+            if(any(flag %in% j)) cat('Random ',j,' is generating...\n')
             rsamplel = modularity_sampling_multi(hist.bin0, deg, membership, S)     
             for(ii in 1:length(rsamplel)){
                 # cat('Random samples for ',names(comm.genelist)[ii],' module\n')

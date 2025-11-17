@@ -17,5 +17,3 @@ Imports:
     magrittr,
     parallel,
     progress
-LinkingTo: 
-    cpp11

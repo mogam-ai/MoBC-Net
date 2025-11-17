@@ -414,7 +414,10 @@ modularity_sampling_multi <- function(re, deg, membership, S) {
         # 현재 모듈의 차수들
         mod_deg <- deg[membership == mod_id]
         # mod_deg <- sort(mod_deg, decreasing = TRUE)
+        # cat(mod_id,'\n')
+        # cat('hh')
         mod_deg <- sample(mod_deg, length(mod_deg), replace=FALSE)
+        # cat('kk\n')
 
         mod_rand <- c()
         for (i in seq_along(mod_deg)) {
