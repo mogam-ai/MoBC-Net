@@ -49,7 +49,7 @@ mst.net = dist.res$mst.net
 plot(mst.net)
 
 # run MoBC
-mobc.res <- MoBC.genes(ppi,module1.gene='1',module2.gene = '2',randomMethod='RandSDM',random=1000, ratio=0.5,nCore=3)
+mobc.res <- MoBC.genes(ppi, modules, module1='1',module2 = '2',randomMethod='RandSDM',random=1000, ratio=0.5,nCore=3)
 mobc.res %>% head
 
 ```
