@@ -1,12 +1,17 @@
 
+### Tutorial
 
 ```{r}
 library(dplyr)
 library(MoBCnet)
 # tutorial
 
-adjm <- read.table(paste0(dirp1,"/A_N1000.txt"))
-module <- read.table(paste0(dirp1,"/M_N1000.txt"))
+
+adjm.file =  ystem.file("data","A_N1000.txt", package='MoBCnet')
+module.file =  ystem.file("data","M_N1000.txt", package='MoBCnet')
+
+adjm <- read.table(adjm.file)
+module <- read.table(module.file)
 modules = split(rownames(module),module[,1])[-1]
 
 #--- setting id
