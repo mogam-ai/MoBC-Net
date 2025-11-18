@@ -1,7 +1,14 @@
+### installation
+'''r
+# install.packages("devtools")
+devtools::install_github("hanbi-99/MoBC-net")
+'''
+
+
 
 ### Tutorial
 
-```{r}
+```r
 library(dplyr)
 library(MoBCnet)
 # tutorial
