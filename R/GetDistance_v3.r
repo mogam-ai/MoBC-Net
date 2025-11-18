@@ -125,8 +125,8 @@ CommuinityDistance <- function(network,
         cat('hi?ㅇㅅㅇ\n')
         S <- igraph::distances(g.res, algorithm = "unweighted")
         cat('hi?ㅎㅅㅎ\n')
-        # comm.distance.list = parallel::mclapply(1:random, mc.cores=nCore, function(j){
-        comm.distance.list = lapply(1:random,  function(j){
+        comm.distance.list = parallel::mclapply(1:random, mc.cores=nCore, function(j){
+        # comm.distance.list = lapply(1:random,  function(j){
             if(any(flag %in% j)) cat('Random ',j,' is generating...\n')
             rsamplel = modularity_sampling_multi(hist.bin0, deg, membership, S)     
             for(ii in 1:length(rsamplel)){
