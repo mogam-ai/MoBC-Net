@@ -257,13 +257,13 @@ cal.MoBC.random <- function(g, comm.genelist, community1n, community2n,random,ra
         saveRDS(hist.bin0, file=fn1)
     }
 
-
+    flag = seq(1,10)/10*random
     # if not random --> make random file first
     if(!all(files_valid) & randomMethod=='randSD'){
         hist.bin = hist.bin0$node_bag
         names(hist.bin) = 1:length(hist.bin)
         make_random = parallel::mclapply(1:random, mc.cores=nCore, function(j){
-
+            if(any(flag %in% j)) cat('Random ',j,' is generating...\n')
             sample.save = list()
             for(ii in 1:length(comm.genelist)){
                 # cat('Random samples for ',names(comm.genelist)[ii],' module\n')
@@ -284,6 +284,7 @@ cal.MoBC.random <- function(g, comm.genelist, community1n, community2n,random,ra
         S <- igraph::distances(g, algorithm = "unweighted")
 
         comm.distance.list = parallel::mclapply(1:random, mc.cores=nCore, function(j){
+            if(any(flag %in% j)) cat('Random ',j,' is generating...\n')
             rsamplel = modularity_sampling_multi(hist.bin0, deg, membership, S)     
             for(ii in 1:length(rsamplel)){
                 # cat('Random samples for ',names(comm.genelist)[ii],' module\n')
@@ -305,9 +306,10 @@ cal.MoBC.random <- function(g, comm.genelist, community1n, community2n,random,ra
 
     if(all(files_valid1)){### edit needed
 
-        cat(paste0('You have tmp files for random sampling - ',randomMethod,". We will use these files.\n"))
+        cat(paste0('You have tmp files for random sampling - ',randomMethod," \(",dirn,"\). We will use these files.\n"))
 
         comm.distance.list = parallel::mclapply(1:random,mc.cores=nCore, function(j){
+            if(any(flag %in% j)) cat('We load ',j,' random.\n')
         # comm.distance.list = lapply(1:random,function(j){
             rs1 = read.csv(paste0(dirn,'/',community1n,'/rand',j,'.csv'))[,1]
             rs2 = read.csv(paste0(dirn,'/',community2n,'/rand',j,'.csv'))[,1]

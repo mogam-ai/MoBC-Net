@@ -161,6 +161,7 @@ CommuinityDistance <- function(network,
                 cl2g = comm.genelist[[n]]
 
                 comm.distance.list = parallel::mclapply(1:random,mc.cores=nCore, function(j){
+                    if(any(flag %in% j)) cat('We load ',j,' random.\n')
                     rs1 = read.csv(paste0(dirn,'/',names(comm.genelist)[m],'/rand',j,'.csv'))[,1]
                     rs2 = read.csv(paste0(dirn,'/',names(comm.genelist)[n],'/rand',j,'.csv'))[,1]
                     
