@@ -306,7 +306,7 @@ cal.MoBC.random <- function(g, comm.genelist, community1n, community2n,random,ra
 
     if(all(files_valid1)){### edit needed
 
-        cat(paste0('You have tmp files for random sampling - ',randomMethod," \(",dirn,"\). We will use these files.\n"))
+        cat(paste0('You have tmp files for random sampling - ',randomMethod," \\(",dirn,"\\). We will use these files.\n"))
 
         comm.distance.list = parallel::mclapply(1:random,mc.cores=nCore, function(j){
             if(any(flag %in% j)) cat('We load ',j,' random.\n')
