@@ -1,8 +1,8 @@
 ### installation
-'''r
+```r
 install.packages("devtools")
 devtools::install_github("hanbi-99/MoBC-net")
-'''
+```
 
 
 
