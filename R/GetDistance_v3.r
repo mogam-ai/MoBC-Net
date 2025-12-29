@@ -7,14 +7,17 @@
 #' User also can make the dist function and use it for calculating module distance
 #' This function is made to know the z-score of a measured distance from distances of degree-preserved random networks
 #' 
-#' @param network network dataframe
-#' @param module.genelist module genes list
-#' @param random the number of random network formation and distance calculation
-#' @param overlap_filtering overlap genes filtering (TRUE/FALSE)
-#' @param method distance measuring method
-#' @return distance results, module.genelist, network
-#' @export 
-#' 
+#' @param network A data frame representing the input biological network.
+#' @param module.genelist A list of gene sets corresponding to predefined network modules.
+#' @param randomMethod A character string specifying the method used to generate randomized networks.
+#' @param random An integer indicating the number of randomized network generations and distance calculations to perform.
+#' @param ratio A numeric value specifying the allowable ratio of overlap when sampling or generating randomized modules.
+#' @param nCore An integer specifying the number of CPU cores to use for parallel computation.
+#' @param method A character string specifying the distance measurement method to use; one of
+#'   \code{"closest"}, \code{"shortest"}, \code{"kernel"}, \code{"centre"}, or \code{"separation"}.
+#' @return A list containing the computed distance results, the input \code{module.genelist}, and the input \code{network}.
+#' @export
+#'
 
 
 # 1.RandC, 2. RandCD, 3. RandCM, 4. RandCDM
@@ -79,8 +82,8 @@ CommuinityDistance <- function(network,
     # - make file name
     module_names <- names(comm.genelist)
     files_valid <- check_module_files(dirn, module_names, random)
-    cat(files_valid,'\n')
-    cat(randomMethod,'\n')
+    # cat(files_valid,'\n')
+    # cat(randomMethod,'\n')
 
     # make directory
     if(!all(files_valid)){
@@ -122,9 +125,7 @@ CommuinityDistance <- function(network,
         })
 
     } else if(!all(files_valid) & randomMethod=='RandSDM'){
-        cat('hi?ㅇㅅㅇ\n')
         S <- igraph::distances(g.res, algorithm = "unweighted")
-        cat('hi?ㅎㅅㅎ\n')
         comm.distance.list = parallel::mclapply(1:random, mc.cores=nCore, function(j){
         # comm.distance.list = lapply(1:random,  function(j){
             if(any(flag %in% j)) cat('Random ',j,' is generating...\n')

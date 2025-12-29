@@ -19,23 +19,27 @@ get.freq.v2 <-function(g, snode, enode){
 }
 
 
-#' Calculate centrality between two modules from MoBC result 
-#' 
-#' 
-#' @title Get.Centrality
-#' @param network results from CommDistFunction function
-#' @param module1 The name of the module for which centrality is being calculated. This should be one of the communities provided as input
-#' @param module2 The name of the module for which centrality is being calculated. This should be one of the communities provided as input
-#' @returns data.frame
+#' Calculate link gene centrality between two modules
+#'
+#' @title MoBC.genes
+#' @param network A data frame representing the input biological network, where rows define interactions between genes.
+#' @param module.gene.list A list of gene sets corresponding to predefined network modules.
+#' @param module1 A character string specifying the first module for which MoBC-based centrality is calculated.
+#'   This must match one of the module names provided in \code{module.gene.list}.
+#' @param module2 A character string specifying the second module for which MoBC-based centrality is calculated.
+#'   This must match one of the module names provided in \code{module.gene.list}.
+#' @param randomMethod A character string specifying the method used to generate randomized networks for significance assessment.
+#' @param random An integer specifying the number of randomized network generations used to estimate centrality significance.
+#' @param ratio A numeric value indicating the maximum allowed overlap ratio when sampling or generating randomized modules.
+#' @param nCore An integer specifying the number of CPU cores to use for parallel computation.
+#' @returns A data frame containing MoBC-based centrality scores and associated statistics for genes linking the two modules.
 #' @export
-#' @examples
-#' Get.Centrality(MoBC.result, 'module_1','module_2')
+
 
 MoBC.genes <- function(network,
                              module.gene.list,
                              module1, module2,
-                            #  randomMethod=c('None','RandC','RandCD','RandCM','RandCDM'),
-                            randomMethod=c('None','RandSD','RandSDM'),
+                             randomMethod=c('None','RandSD','RandSDM'),
 							 random = 1000,
                              nCore=1,
                              ratio = 0.1) {
@@ -76,20 +80,6 @@ MoBC.genes <- function(network,
 	}
 
 
-
-
-#' Calculate centrality between two modules from MoBC result 
-#' 
-#' 
-#' @title cal.MoBCgenes
-#' @param g graph
-#' @param comm.genelist list of community genes
-#' @param community1n The name of the community for which centrality is being calculated. This should be one of the communities provided as input
-#' @param community2n The name of the community for which centrality is being calculated. This should be one of the communities provided as input
-#' @returns vector
-#' @export
-#' @examples
-#' cal.MoBCgenes(graph, 'community1','community2',random,ratio,randomMethod, nCore)
 
 
 
@@ -133,20 +123,6 @@ cal.MoBCgenes <- function(g, comm.genelist, community1n, community2n,random,rati
     }
 	return(score.df[,colix])
 }
-
-
-
-#' Calculate centrality between two modules from MoBC result 
-#' 
-#' 
-#' @title cal.MoBCgenes.values
-#' @param g graph
-#' @param community1 The name of the module for which centrality is being calculated. This should be one of the communities provided as input
-#' @param community2 The name of the module for which centrality is being calculated. This should be one of the communities provided as input
-#' @returns vector
-#' @export
-#' @examples
-#' cal.MoBCgenes.values(graph, 'module_1','module_2', allg)
 
 
 #--- new
@@ -203,8 +179,6 @@ cal.MoBCgenes.values <- function(g, community1, community2, allg){
 
 	return(scorev)
 }
-
-
 
 
 # g = res2@graph
@@ -306,15 +280,17 @@ cal.MoBC.random <- function(g, comm.genelist, community1n, community2n,random,ra
 
     if(all(files_valid1)){### edit needed
 
-        cat(paste0('You have tmp files for random sampling - ',randomMethod," \\(",dirn,"\\). We will use these files.\n"))
+        cat(paste0('You have tmp files for random sampling based on ',randomMethod,": ",dirn,". We will use these files.\n"))
 
         comm.distance.list = parallel::mclapply(1:random,mc.cores=nCore, function(j){
             if(any(flag %in% j)) cat('We load ',j,' random.\n')
-        # comm.distance.list = lapply(1:random,function(j){
+            cat('read ',j,'\n')
             rs1 = read.csv(paste0(dirn,'/',community1n,'/rand',j,'.csv'))[,1]
             rs2 = read.csv(paste0(dirn,'/',community2n,'/rand',j,'.csv'))[,1]
+            cat('cal ',j,'\n')
             
             comm.distance = cal.MoBCgenes.values(g, rs1,rs2, allg) 
+            cat('done ',j,'\n')
             return(comm.distance)
         })
         comm.distance.list = do.call(cbind, comm.distance.list) %>% 'rownames<-'(allg)
@@ -329,22 +305,6 @@ cal.MoBC.random <- function(g, comm.genelist, community1n, community2n,random,ra
 
 
 
-
-
-
-
-
-#' Calculate centrality between two modules from MoBC result 
-#' 
-#' 
-#' @title cal.FCgene
-#' @param g graph
-#' @param module1.name The name of the module for which centrality is being calculated. This should be one of the communities provided as input
-#' @param module2.name The name of the module for which centrality is being calculated. This should be one of the communities provided as input
-#' @returns data.frame
-#' @export
-#' @examples
-#' cal.FCgene(graph, 'module_1','module_2')
 
 
 
@@ -385,61 +345,188 @@ cal.FCgene <- function(g, community1, community2){
 
 
 
-#' Calculate centrality between two modules from MoBC result 
+#' Plot shortest paths through a link gene between two modules
 #' 
-#' 
-#' @title plotDist
-#' @param MoBC.result results from CommDistFunction function
-#' @param pval cut-off for filtering edges between communities
-#' @returns plot
+#' @param g Network data frame
+#' @param module1 First module genes
+#' @param module2 Second module genes  
+#' @param linkgene Target link gene to visualize paths through
 #' @export
-#' @examples
-#' plotDist(MoBC.result, pval=0.05)
+#'
+
+link.gene.path<-function(g, x, y, linkgene) {
+
+    g.graph = preprocessedNetwork(g)
+    shortestm = igraph::distances(g.graph, x, y)
+    rmin  = apply(shortestm,1,function(xx) colnames(shortestm)[which(xx %in% min(xx))])
+    cmin  = apply(shortestm,2,function(xx) rownames(shortestm)[which(xx %in% min(xx))])
+    shorteste = lapply(names(rmin), function(snode) {
+        enode = rmin[[snode]]
+        edges = igraph::all_shortest_paths(g.graph, snode, enode)
+        edges$res
+    })
+    shorteste.2 = lapply(names(cmin), function(snode) {
+        enode = cmin[[snode]]
+        edges = igraph::all_shortest_paths(g.graph, snode, enode)
+        edges$res
+    })
+
+    path.res = lapply(linkgene, function(gene) {
+        # cat(gene,'\n')
+        vv = lapply(shorteste, function(x1) {
+            x1 = lapply(x1, names)
+            tfv = sapply(x1, function(path) any(path %in% gene))
+            if(!any(tfv)) return(NULL)
+            x1[tfv]
+            })
+        vv1 = vv[!sapply(vv, is.null)]
+        vv2 = list()
+        for(ii in 1:length(vv1)){
+            for(jj in 1:length(vv1[[ii]])){
+                vv2 = c(vv2, vv1[[ii]][jj])
+            }
+        }
+        
+        return(vv2)
+    }) %>% 'names<-'(linkgene)
+
+    path.res.2 = lapply(linkgene, function(gene) {
+        # cat(gene,'\n')
+        vv = lapply(shorteste.2, function(x1) {
+            x1 = lapply(x1, names)
+            tfv = sapply(x1, function(path) any(path %in% gene))
+            if(!any(tfv)) return(NULL)
+            x1[tfv]
+            })
+        vv1 = vv[!sapply(vv, is.null)]
+        if(length(vv1)==0) return(NULL)
+        vv2 = list()
+        for(ii in 1:length(vv1)){
+            for(jj in 1:length(vv1[[ii]])){
+                vv2 = c(vv2, vv1[[ii]][jj])
+            }
+        }
+        
+        return(vv2)
+    }) %>% 'names<-'(linkgene)
+
+    path.res = list(path1 = path.res, path2 =path.res.2)
+
+    # plot function
+    ppi.df = g
+
+    tdf.a =  lapply(path.res[['path1']][[linkgene]], function(vv){
+        tdf2 = lapply(2:length(vv), function(ii){
+            data.frame(from=vv[ii-1],to=vv[ii])
+        }) %>% bind_rows %>% as.data.frame
+    }) %>% bind_rows %>% as.data.frame
+    tdf.b =  lapply(path.res[['path2']][[linkgene]], function(vv){
+        tdf2 = lapply(2:length(vv), function(ii){
+            data.frame(from=vv[ii-1],to=vv[ii])
+        }) %>% bind_rows %>% as.data.frame
+    }) %>% bind_rows %>% as.data.frame
 
 
+    tt = rbind(tdf.a, tdf.b)
+
+    #-- key leftg
+
+    ta =  lapply(path.res[['path1']][[linkgene]], function(vv){
+        vv[1:(which(vv==linkgene)-1)]
+        }) %>% unlist %>% unique
+
+    tb =  lapply(path.res[['path2']][[linkgene]], function(vv){
+        vv[(which(vv==linkgene)+1):length(vv)]
+        }) %>% unlist %>% unique
+
+    intersect(ta, tb)
+    t.all = c(ta, tb)
 
 
-plotDist <- function(MoBC.result, pval=0.05){
-	if(!is(MoBC.result, 'MoBCresult')){
-		stop("input should be MoBC class", call. = FALSE)
-	}
+    ntkg = graph_from_data_frame(tt, directed=TRUE)
+    ntkg = igraph::simplify(ntkg, remove.multiple = TRUE, remove.loops = TRUE)
 
-	distm = MoBC.result@MoBCresults
-	sig.dist = subset(distm, pvalue < pval)[,1:3]
-	sig.dist$weight = -sig.dist$z_score
-	ntkg = igraph::graph_from_data_frame(sig.dist[,c('Module1','Module2','weight')], directed=FALSE)
-	ntkg = igraph::simplify(ntkg, remove.multiple = TRUE, remove.loops = TRUE)
 
-    maxn = max(lengths(MoBC.result@filtered.modules))
-    comm.col = colorspace::sequential_hcl(length(MoBC.result@filtered.modules), "Terrain") %>% 'names<-'(names(MoBC.result@filtered.modules))
-    
-    commn = lengths(MoBC.result@filtered.modules)[igraph::V(ntkg)$name]
-    sizev = (commn-min(commn))/(max(commn)-min(commn))
-    sizev = sizev*20+20
+    shortestm = igraph::distances(ntkg, igraph::V(ntkg)$name, linkgene) %>% as.data.frame %>% 'colnames<-'(c('x'))
+    shortestm = shortestm*2
+    shortestm[which(rownames(shortestm) %in% t.all),1] = -shortestm[which(rownames(shortestm) %in% t.all),1]
+    shortestm = shortestm %>% arrange(x)
+    shl = split(shortestm, shortestm[,1]) %>% lapply(function(vv){
 
-	layout <- igraph::layout_with_fr(ntkg)
+        if(nrow(vv)==1){
+            val=0
+        } else{
+            val = seq(-2,2,length.out=nrow(vv))
+        }
+        vv$y = val
+        return(vv)
 
-	plre = plot(ntkg, 
-		layout = layout, 
-		# mark.groups = split(V(g)$name,clv),
-		# vertex.label = fgid1[match(V(g)$name, fgid1$EntrezID),'gene_name'],
-		# vertex.label = '', #vns
-		vertex.color=comm.col[igraph::V(ntkg)$name],
-		vertex.frame.width=0.3,
-		vertex.frame.color='white',
-		edge.color ="grey",#adjustcolor('black', alpha=0.6),
-		# vertex.size= (cln[V(cl.ntkg)$name]^0.5)*4,
-		vertex.size=sizev,
-		# vertex.label.dist=1,
-		# vertex.frame.color = 'grey90',
-		vertex.label.color='black',
-		# vertex.label.font=ifelse(V(g)$name %in% np.gl[[pn]], 2,1),
-		vertex.label.size = 0.1,
-		edge.width=(rank(igraph::E(ntkg)$weight))
-	)
+    }) %>% bind_rows %>% as.matrix
+    shl = shl[igraph::V(ntkg)$name,]
 
-    legend("bottomright", col=comm.col, pch=19, legend=names(comm.col), title='Module')
+    # shortest path
+
+
+    # plot(ntkg, layout=layout_on_grid)
+
+    vcol.ix = colorRampPalette(brewer.pal(8,'Set2'))(length(comms))
+    if(data.type=='cac') vcol.ix[2] = vcol.ix[6]
+    vcol.ix = adjustcolor(vcol.ix,0.5)
+
+    vv = igraph::V(ntkg)$name
+    colv = rep('grey',length(vv))
+    colv[vv %in% m1] = vcol.ix[module.n1]
+    colv[vv %in% m2] = vcol.ix[module.n2]
+    colv[vv %in% linkgene] = ifelse(data.type=='brca','mediumorchid','forestgreen')
+
+
+    if(length(unique(tt[,1]))>10){
+
+        ids = shl %>% rownames()
+        ids[shl[,1]<0] = ''
+        shl[which(shl[,1]==4),1]=3
+
+        # xx = norm_coords(shl, xmin = -1, xmax) --> test
+
+
+        plot(ntkg, 
+            layout = shl, 
+            rescale=TRUE,
+            vertex.size=ifelse(ids=='',4,12),
+            edge.arrow.size=0.5,
+            vertex.label = ids, #felse(shl[,1]<0,'',),#labels,
+            vertex.color=colv,#'orange',
+            vertex.frame.width=2,#ifelse(tfv,2,1),
+            vertex.frame.color='black',#border.col, #rep('white', length(tcolor)),#tcolor,#'white',
+            edge.color ='black', #adjustcolor('black', alpha=0.6),
+            vertex.label.family='Arial',
+            vertex.label.color='black',
+            vertex.label.cex = 0.8,
+            edge.width=1
+        )
+
+        xx = norm_coords(shl)
+        textl = xx[ids=='',]
+        textl[,1]=textl[,1]-0.15
+
+        text(textl[,1],textl[,2], rownames(textl), col='black',cex=0.9)
+
+
+    } else{
+
+        plot(ntkg, 
+            layout = shl, 
+            rescale=TRUE,
+            vertex.color=colv,#'orange',
+            vertex.frame.width=2,#ifelse(tfv,2,1),
+            vertex.frame.color='black',#border.col, #rep('white', length(tcolor)),#tcolor,#'white',
+            edge.color ='black', #adjustcolor('black', alpha=0.6),
+            vertex.label.family='Arial',
+            vertex.label.color='black',
+            vertex.label.cex = 0.8,
+            edge.width=1
+        )
+
+    }
+
 }
-
-
-
