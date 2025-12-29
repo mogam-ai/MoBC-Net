@@ -26,7 +26,6 @@ devtools::install_github("hanbi-99/MoBC-net")
 ```
 
 
-
 ### Tutorial
 
 ```r
