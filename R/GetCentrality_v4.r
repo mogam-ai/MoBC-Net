@@ -351,10 +351,13 @@ cal.FCgene <- function(g, community1, community2){
 #' @param module1 First module genes
 #' @param module2 Second module genes  
 #' @param linkgene Target link gene to visualize paths through
+#' @param col1 Color for first module genes
+#' @param col2 Color for second module genes
+#' @param link.col Color for link genes
 #' @export
 #'
 
-link.gene.path<-function(g, x, y, linkgene) {
+link.gene.path<-function(g, x, y, linkgene,col1,col2,link.col) {
 
     g.graph = preprocessedNetwork(g)
     shortestm = igraph::distances(g.graph, x, y)
@@ -469,15 +472,11 @@ link.gene.path<-function(g, x, y, linkgene) {
 
     # plot(ntkg, layout=layout_on_grid)
 
-    vcol.ix = colorRampPalette(brewer.pal(8,'Set2'))(length(comms))
-    if(data.type=='cac') vcol.ix[2] = vcol.ix[6]
-    vcol.ix = adjustcolor(vcol.ix,0.5)
-
     vv = igraph::V(ntkg)$name
     colv = rep('grey',length(vv))
-    colv[vv %in% m1] = vcol.ix[module.n1]
-    colv[vv %in% m2] = vcol.ix[module.n2]
-    colv[vv %in% linkgene] = ifelse(data.type=='brca','mediumorchid','forestgreen')
+    colv[vv %in% x] = col1
+    colv[vv %in% y] = col2
+    colv[vv %in% linkgene] = link.col
 
 
     if(length(unique(tt[,1]))>10){
