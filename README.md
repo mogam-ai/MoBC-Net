@@ -31,6 +31,7 @@ devtools::install_github("hanbi-99/MoBC-net")
 ```r
 library(dplyr)
 library(MoBCnet)
+library(reshape2)
 
 #--- load data & setting
 adjm.file =  ystem.file("data","A_N1000.txt", package='MoBCnet')
