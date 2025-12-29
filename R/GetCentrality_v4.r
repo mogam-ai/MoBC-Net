@@ -504,7 +504,7 @@ link.gene.path<-function(g, x, y, linkgene,col1,col2,link.col) {
             edge.width=1
         )
 
-        xx = norm_coords(shl)
+        xx = igraph::norm_coords(shl)
         textl = xx[ids=='',]
         textl[,1]=textl[,1]-0.15
 
