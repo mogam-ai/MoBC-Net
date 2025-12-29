@@ -7,9 +7,16 @@ Our method selects interacting module pairs based on a **closest-distance measur
 
 By integrating network topology with rigorous statistical evaluation, MoBC-Net enables systematic discovery of biologically meaningful module–module interactions and their critical connector genes.
 
-<img src="https://github.com/user-attachments/assets/b1fdc11d-6927-45af-9668-777d29b85bc3"
-     alt="image"
-     width="800" />
+<br>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/b1fdc11d-6927-45af-9668-777d29b85bc3"
+       alt="image"
+       width="800" />
+</p>
+
+<br>
+
 
 ---
 ### installation
