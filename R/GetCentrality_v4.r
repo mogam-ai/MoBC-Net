@@ -443,7 +443,7 @@ link.gene.path<-function(g, x, y, linkgene) {
     t.all = c(ta, tb)
 
 
-    ntkg = graph_from_data_frame(tt, directed=TRUE)
+    ntkg = igraph::graph_from_data_frame(tt, directed=TRUE)
     ntkg = igraph::simplify(ntkg, remove.multiple = TRUE, remove.loops = TRUE)
 
 
