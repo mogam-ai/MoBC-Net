@@ -15,18 +15,23 @@ CommuinityDistance(
 )
 }
 \arguments{
-\item{network}{network dataframe}
+\item{network}{A data frame representing the input biological network.}
 
-\item{module.genelist}{module genes list}
+\item{module.genelist}{A list of gene sets corresponding to predefined network modules.}
 
-\item{random}{the number of random network formation and distance calculation}
+\item{randomMethod}{A character string specifying the method used to generate randomized networks.}
 
-\item{method}{distance measuring method}
+\item{random}{An integer indicating the number of randomized network generations and distance calculations to perform.}
 
-\item{overlap_filtering}{overlap genes filtering (TRUE/FALSE)}
+\item{ratio}{A numeric value specifying the allowable ratio of overlap when sampling or generating randomized modules.}
+
+\item{nCore}{An integer specifying the number of CPU cores to use for parallel computation.}
+
+\item{method}{A character string specifying the distance measurement method to use; one of
+\code{"closest"}, \code{"shortest"}, \code{"kernel"}, \code{"centre"}, or \code{"separation"}.}
 }
 \value{
-distance results, module.genelist, network
+A list containing the computed distance results, the input \code{module.genelist}, and the input \code{network}.
 }
 \description{
 Calculate the distance and z_score of the communities

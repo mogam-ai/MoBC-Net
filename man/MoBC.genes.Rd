@@ -2,7 +2,7 @@
 % Please edit documentation in R/GetCentrality_v4.r
 \name{MoBC.genes}
 \alias{MoBC.genes}
-\title{Get.Centrality}
+\title{MoBC.genes}
 \usage{
 MoBC.genes(
   network,
@@ -16,18 +16,27 @@ MoBC.genes(
 )
 }
 \arguments{
-\item{network}{results from CommDistFunction function}
+\item{network}{A data frame representing the input biological network, where rows define interactions between genes.}
 
-\item{module1}{The name of the module for which centrality is being calculated. This should be one of the communities provided as input}
+\item{module.gene.list}{A list of gene sets corresponding to predefined network modules.}
 
-\item{module2}{The name of the module for which centrality is being calculated. This should be one of the communities provided as input}
+\item{module1}{A character string specifying the first module for which MoBC-based centrality is calculated.
+This must match one of the module names provided in \code{module.gene.list}.}
+
+\item{module2}{A character string specifying the second module for which MoBC-based centrality is calculated.
+This must match one of the module names provided in \code{module.gene.list}.}
+
+\item{randomMethod}{A character string specifying the method used to generate randomized networks for significance assessment.}
+
+\item{random}{An integer specifying the number of randomized network generations used to estimate centrality significance.}
+
+\item{nCore}{An integer specifying the number of CPU cores to use for parallel computation.}
+
+\item{ratio}{A numeric value indicating the maximum allowed overlap ratio when sampling or generating randomized modules.}
 }
 \value{
-data.frame
+A data frame containing MoBC-based centrality scores and associated statistics for genes linking the two modules.
 }
 \description{
-Calculate centrality between two modules from MoBC result
-}
-\examples{
-Get.Centrality(MoBC.result, 'module_1','module_2')
+Calculate link gene centrality between two modules
 }
