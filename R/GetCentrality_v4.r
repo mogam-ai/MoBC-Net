@@ -215,8 +215,8 @@ cal.MoBC.random <- function(g, comm.genelist, community1n, community2n,random,ra
     # - make file name
     module_names <- names(comm.genelist)
     files_valid <- check_module_files(dirn, module_names, random)
-    cat(files_valid,'\n')
-    cat(randomMethod,'\n')
+    # cat(files_valid,'\n')
+    # cat(randomMethod,'\n')
 
 
     # make directory
@@ -284,13 +284,13 @@ cal.MoBC.random <- function(g, comm.genelist, community1n, community2n,random,ra
 
         comm.distance.list = parallel::mclapply(1:random,mc.cores=nCore, function(j){
             if(any(flag %in% j)) cat('We load ',j,' random.\n')
-            cat('read ',j,'\n')
+            # cat('read ',j,'\n')
             rs1 = read.csv(paste0(dirn,'/',community1n,'/rand',j,'.csv'))[,1]
             rs2 = read.csv(paste0(dirn,'/',community2n,'/rand',j,'.csv'))[,1]
-            cat('cal ',j,'\n')
+            # cat('cal ',j,'\n')
             
             comm.distance = cal.MoBCgenes.values(g, rs1,rs2, allg) 
-            cat('done ',j,'\n')
+            # cat('done ',j,'\n')
             return(comm.distance)
         })
         comm.distance.list = do.call(cbind, comm.distance.list) %>% 'rownames<-'(allg)
