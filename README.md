@@ -34,8 +34,8 @@ library(MoBCnet)
 library(reshape2)
 
 #--- load data & setting
-adjm.file =  ystem.file("data","A_N1000.txt", package='MoBCnet')
-module.file =  ystem.file("data","M_N1000.txt", package='MoBCnet')
+adjm.file =  system.file("data","A_N1000.txt", package='MoBCnet')
+module.file =  system.file("data","M_N1000.txt", package='MoBCnet')
 
 adjm <- read.table(adjm.file)
 module <- read.table(module.file)
