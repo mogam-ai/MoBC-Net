@@ -56,8 +56,15 @@ re1 = dist.res$distance
 re2 = dist.res$filtered.modules
 re3 = dist.res$graph
 
-# run MoBC
+#--- run MoBC
 mobc.res <- MoBC.genes(ppi, module.gene.list=modules, module1='1', module2 = '2', randomMethod='RandSDM',random=1000, ratio=0.07,nCore=3)
 mobc.res %>% head
+
+#--- plot link path
+m1 = modules[['1']]
+m2 = modules[['2']]
+linkgene='200'
+
+link.gene.path(ppi, m1, m2, linkgene, col1='pink',col2='lightblue',link.col='forestgreen')
 
 ```
