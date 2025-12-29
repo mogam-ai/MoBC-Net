@@ -1,4 +1,15 @@
-<img width="1656" height="1046" alt="image" src="https://github.com/user-attachments/assets/b1fdc11d-6927-45af-9668-777d29b85bc3" />
+
+## MoBC-Net
+
+**MoBC-Net** is an R package for identifying statistically significant interacting module pairs and their key link genes in biological networks.
+
+Our method selects interacting module pairs based on a **closest-distance measure** between modules, and identifies **link genes** using **module betweenness centrality (MoBC)**. To assess the robustness and significance of the detected interactions, MoBC-Net employs an **adaptive binning and randomization scheme** that preserves key network properties, including **module size**, **node degree distribution**, and **network modularity**.
+
+By integrating network topology with rigorous statistical evaluation, MoBC-Net enables systematic discovery of biologically meaningful module–module interactions and their critical connector genes.
+
+<img src="https://github.com/user-attachments/assets/b1fdc11d-6927-45af-9668-777d29b85bc3"
+     alt="image"
+     width="800" />
 
 
 ### installation
