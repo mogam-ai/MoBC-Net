@@ -11,7 +11,7 @@ By integrating network topology with rigorous statistical evaluation, MoBC-Net e
      alt="image"
      width="800" />
 
-
+---
 ### installation
 ```r
 install.packages("devtools")
