@@ -57,7 +57,7 @@ re3 = dist.res$graph
 ```
 
 
-### Get plot dendrogram
+### Get dendrogram plot
 ```r
 xre = re1; 
 zmin = min(xre$z_score)
@@ -72,11 +72,8 @@ xrem = as.dist(xrem)
 
 hc = hclust(xrem, method='single')
 plot(hc, cex=2, hang=-1, yaxt = "n",main=' ',ylab=' ')
-
-# weight 기준 y축 위치
 yticks = pretty(hc$height)
 
-# z_score로 변환한 label
 zlabels = yticks + zmin - 0.01
 axis(2, at = yticks, labels = round(zlabels, 2))
 mtext("z_score", side = 2, line = 3)
