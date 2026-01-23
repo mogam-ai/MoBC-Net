@@ -19,14 +19,14 @@ By integrating network topology with rigorous statistical evaluation, MoBC-Net e
 
 
 ---
-### installation
+## Installation
 ```r
 install.packages("devtools")
 devtools::install_github("hanbi-99/MoBC-net")
 ```
 
 
-### Data load
+## Data load
 ```r
 library(dplyr)
 library(MoBCnet)
@@ -48,7 +48,7 @@ module.gene.list = modules
 ```
 
 
-### Caculate community distance
+## Caculate community distance
 ```r
 dist.res <- CommuinityDistance(ppi,modules,randomMethod='RandSDM',random=1000, ratio=0.1,nCore=3)
 re1 = dist.res$distance
@@ -57,7 +57,7 @@ re3 = dist.res$graph
 ```
 
 
-### Get dendrogram plot
+## Get dendrogram plot
 ```r
 xre = re1; 
 zmin = min(xre$z_score)
@@ -80,14 +80,14 @@ mtext("z_score", side = 2, line = 3)
 ```
 
 
-### Get link genes
+## Get link genes
 ```r
 mobc.res <- MoBC.genes(ppi, module.gene.list=modules, module1='1', module2 = '2', randomMethod='RandSDM',random=1000, ratio=0.07,nCore=3)
 mobc.res %>% head
 ```
 
 
-### Get plot for link path
+## Get plot for link path
 ```r
 m1 = modules[['1']]
 m2 = modules[['2']]
