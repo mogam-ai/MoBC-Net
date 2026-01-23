@@ -10,7 +10,7 @@ By integrating network topology with rigorous statistical evaluation, MoBC-Net e
 <br>
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/b1fdc11d-6927-45af-9668-777d29b85bc3"
+  <img width="7255" height="4652" alt="Figure1_graphical_abstract_20260117" src="https://github.com/user-attachments/assets/83fb6700-402d-43f6-8248-88da730ff57b" />
        alt="image"
        width="800" />
 </p>
