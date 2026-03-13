@@ -497,7 +497,7 @@ cal.random <- function(g, comm.genelist, community1n, community2n,random,ratio,r
             cat('You choosed S2B method.\n')
             comm.distance.list = parallel::mclapply(1:random,mc.cores=nCore, function(j){
             # comm.distance.list = lapply(1:random,function(j){
-                cat(j,'-th random sampling is done.\n')
+                # cat(j,'-th random sampling is done.\n')
                 rs1 = read.csv(paste0(dirn,'/',community1n,'/rand',j,'.csv'))[,1] %>% as.character
                 rs2 = read.csv(paste0(dirn,'/',community2n,'/rand',j,'.csv'))[,1] %>% as.character
                 
